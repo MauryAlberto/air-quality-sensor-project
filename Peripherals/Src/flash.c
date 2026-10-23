@@ -1,7 +1,7 @@
 /*
  * flash.c
  *
- *  Containas function definitions for configuring the MCU's internal flash memory.
+ *  Contains function definitions for configuring the MCU's internal flash memory.
  */
 
 #include "flash.h"
