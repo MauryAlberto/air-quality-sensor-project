@@ -64,7 +64,7 @@ void error_handler_send_msg(event_id_e error);
  * Sends an error message from an ISR to the Error Handler by passing the Error ID.
  * @param error the enumerated error ID code.
  */
-void errro_handler_send_msg_from_isr(event_id_e error);
+void error_handler_send_msg_from_isr(event_id_e error);
 
 /*
  * Starts the Error Handler Task.
