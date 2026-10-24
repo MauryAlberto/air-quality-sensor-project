@@ -5,6 +5,8 @@
 #include "mcu.h"
 #include "rcc.h"
 #include "gpio.h"
+#include "error_handler_task.h"
+#include "sys_health_monitor_task.h"
 #include "FreeRTOSConfig.h"
 #include "FreeRTOSTasks.h"
 
@@ -51,13 +53,12 @@ int main(void)
  */
 static void startup_task(void* param)
 {
-  while(1)
-  {
-    // USER LED test
-    gpio_toggle_pin(USER_LED_PORT, USER_LED_PIN);
-    vTaskDelay(pdMS_TO_TICKS(500));
+  // Start the Error Handler Task
+  error_handler_task_start();
 
-  }
+  // Start the System Health Monitor Task
+  sys_health_monitor_task_start();
+
   // Deleting the startup task
   vTaskDelete(NULL);
 }
