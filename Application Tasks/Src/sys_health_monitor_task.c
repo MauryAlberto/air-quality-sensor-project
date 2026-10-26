@@ -11,7 +11,7 @@
 #include "gpio.h"
 #include "adc.h"
 #include "tim.h"
-// #include "iwdg.h"
+#include "iwdg.h"
 
 // Critical-task heartbeat flags.
 // Each monitored task sets its flag after completing a successful execution cycle.
@@ -87,11 +87,13 @@ static void sys_health_monitor_task(void *param)
   // Initialize the analog watchdog based on the thresholds using adc_awd_init()
   adc_awd_init(ADC1, ADC_CH18, awd_htr, awd_ltr);
 
-  // Initialize the IWDG here if not in Debug Mode
-  if ((CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk) == 0)
-  {
-    // Debugger not connected, safe to enable IWDG
-  }
+//  // Initialize the IWDG here if not in Debug Mode
+//  if ((CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk) == 0)
+//  {
+//    // Debugger not connected, safe to enable IWDG
+//  }
+
+  iwdg_init();
 
   // Variable used to check the system health
   bool system_healthy;
@@ -106,7 +108,6 @@ static void sys_health_monitor_task(void *param)
     // Wait for the next cycle
     xTaskDelayUntil(&xLastWakeTime, xFrequency);
 
-    // Optional: Get the temperature for demonstration purposes
     if (ADC1_CONVERSION_COMPLETE)
     {
       internal_temp = adc_to_temperature(adc_temp_val);
@@ -119,7 +120,7 @@ static void sys_health_monitor_task(void *param)
 
     if (system_healthy)
     {
-
+      iwdg_reset();
 
       // Consume the task heartbeats so each critical task must report healthy
       // again before the next watchdog reset.

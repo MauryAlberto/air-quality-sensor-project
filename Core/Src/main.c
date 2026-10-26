@@ -6,6 +6,7 @@
 #include "rcc.h"
 #include "gpio.h"
 #include "irq.h"
+#include "button.h"
 #include "error_handler_task.h"
 #include "sys_health_monitor_task.h"
 #include "FreeRTOSConfig.h"
@@ -57,6 +58,12 @@ int main(void)
  */
 static void startup_task(void* param)
 {
+  // Initialize the USER button
+  button_init();
+
+  // Check if the IWDG caused a reset
+  button_check_and_acknowledge_iwdg_event();
+
   // Start the Error Handler Task
   error_handler_task_start();
 
